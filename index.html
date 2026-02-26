@@ -3,155 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cross-Origin-Opener-Policy" content="unsafe-none">
-    <title>TITAN PHOENIX V12 | Pro AI Suite</title>
+    <title>TITAN PHOENIX V12 | Ultra-Fast AI Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithRedirect, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBjijSc9bNh2CXJiEfR7WgCT77CNscSTPs",
-            authDomain: "titan-app-vbc.firebaseapp.com",
-            projectId: "titan-app-vbc",
-            storageBucket: "titan-app-vbc.firebasestorage.app",
-            messagingSenderId: "700768811307",
-            appId: "1:700768811307:web:32c8afd9dda8133d302d6e"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        window.login = () => signInWithRedirect(auth, new GoogleAuthProvider());
-        window.logout = () => signOut(auth).then(() => location.reload());
-
-        window.activateSystem = async () => {
-            const user = auth.currentUser;
-            const key = document.getElementById('keyIn').value;
-            if(key === "TITAN-VBC-2024") { 
-                await setDoc(doc(db, "users", user.uid), { email: user.email, status: "Active" }, { merge: true });
-                location.reload();
-            } else { alert("Invalid Key."); }
-        };
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                document.getElementById('authGate').classList.add('hidden');
-                document.getElementById('licenseGate').classList.remove('hidden');
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists() && userDoc.data().status === "Active") {
-                    document.getElementById('gateWrapper').style.display = 'none';
-                    document.getElementById('mainAppUI').classList.remove('hidden');
-                }
-            }
-        });
-    </script>
-
     <style>
         body { font-family: 'Inter', sans-serif; background: #000; color: white; margin: 0; overflow: hidden; }
-        .vbc-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
-        .tool-card { transition: 0.3s; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
-        .tool-card:hover { background: rgba(65, 12, 217, 0.1); border-color: #410CD9; transform: translateY(-3px); }
-        ::-webkit-scrollbar { width: 5px; }
+        .vbc-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
+        .tool-card { transition: all 0.2s ease-out; cursor: pointer; border: 1px solid rgba(255,255,255,0.03); }
+        .tool-card:hover { background: #410CD9; border-color: #410CD9; transform: scale(1.02); box-shadow: 0 20px 40px rgba(65, 12, 217, 0.3); }
+        .tool-card:hover * { color: white !important; }
+        .sidebar-link { transition: 0.2s; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; color: #888; font-weight: 600; font-size: 13px; }
+        .sidebar-link:hover { background: rgba(255,255,255,0.05); color: white; }
+        .active-link { background: rgba(65, 12, 217, 0.1); color: #410CD9; border: 1px solid rgba(65, 12, 217, 0.2); }
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+        .hidden { display: none !important; }
     </style>
 </head>
-<body class="h-screen overflow-hidden">
+<body class="h-screen flex overflow-hidden">
 
 <div id="gateWrapper" class="fixed inset-0 z-[9999] bg-black flex items-center justify-center p-6 text-center">
-    <div class="vbc-card max-w-md w-full p-10 rounded-[40px]">
-        <h1 class="text-3xl font-black mb-6 italic uppercase">Titan Phoenix</h1>
-        <div id="authGate">
-            <button onclick="login()" class="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-3">Continue with Google</button>
-        </div>
-        <div id="licenseGate" class="hidden">
-            <input type="text" id="keyIn" placeholder="ENTER KEY" class="w-full p-5 bg-white/5 border border-white/10 rounded-2xl text-center mb-4 text-white outline-none">
-            <button onclick="activateSystem()" class="w-full py-5 rounded-2xl font-bold bg-[#410CD9]">ACTIVATE</button>
-        </div>
+    <div class="vbc-card max-w-sm w-full p-10 rounded-[40px]">
+        <div class="w-16 h-16 bg-indigo-600 rounded-2xl mx-auto mb-6 flex items-center justify-center text-3xl font-black italic shadow-2xl">T</div>
+        <h1 class="text-2xl font-black mb-1 uppercase tracking-tighter italic">Titan Phoenix</h1>
+        <p class="text-gray-600 text-[9px] mb-8 uppercase tracking-[0.3em] font-bold">High Speed Neural Engine</p>
+        
+        <input type="password" id="keyIn" placeholder="SYSTEM KEY" class="w-full p-4 bg-white/5 border border-white/10 rounded-xl text-center mb-4 text-white outline-none focus:border-indigo-500 font-mono">
+        <button onclick="checkKey()" class="w-full py-4 rounded-xl font-black bg-white text-black hover:bg-indigo-500 hover:text-white transition-all text-xs uppercase tracking-widest">Authorize</button>
     </div>
 </div>
 
-<div id="mainAppUI" class="hidden h-screen flex overflow-hidden">
+<aside id="sidebar" class="hidden w-64 bg-[#050505] border-r border-white/5 flex flex-col h-full overflow-y-auto">
+    <div class="p-8 border-b border-white/5">
+        <h2 class="font-black italic text-xl tracking-tighter">PHOENIX <span class="text-indigo-600">V12</span></h2>
+    </div>
     
-    <aside class="w-64 bg-[#080808] border-r border-white/5 flex flex-col overflow-y-auto">
-        <div class="p-8"><h2 class="font-black italic text-xl tracking-tighter">PHOENIX V12</h2></div>
-        
-        <nav class="flex-1 px-4 space-y-2">
-            <p class="text-[10px] font-black text-gray-600 uppercase tracking-widest px-4 mb-2">Core Modules</p>
-            <div class="flex items-center gap-3 p-3 bg-indigo-500/10 text-indigo-400 rounded-xl font-bold text-sm"><span>🤖</span> AI Chat Terminal</div>
-            <div class="flex items-center gap-3 p-3 hover:bg-white/5 text-gray-400 rounded-xl font-bold text-sm transition"><span>🎨</span> Image Studio</div>
-            <div class="flex items-center gap-3 p-3 hover:bg-white/5 text-gray-400 rounded-xl font-bold text-sm transition"><span>📝</span> Content Writer</div>
-            
-            <p class="text-[10px] font-black text-gray-600 uppercase tracking-widest px-4 mt-8 mb-2">Advanced Tools</p>
-            <div class="flex items-center gap-3 p-3 hover:bg-white/5 text-gray-400 rounded-xl font-bold text-sm transition"><span>🔍</span> SEO Analyzer</div>
-            <div class="flex items-center gap-3 p-3 hover:bg-white/5 text-gray-400 rounded-xl font-bold text-sm transition"><span>💻</span> Code Assistant</div>
-            <div class="flex items-center gap-3 p-3 hover:bg-white/5 text-gray-400 rounded-xl font-bold text-sm transition"><span>📱</span> Social Planner</div>
-            <div class="flex items-center gap-3 p-3 hover:bg-white/5 text-gray-400 rounded-xl font-bold text-sm transition"><span>📧</span> Email Automator</div>
-        </nav>
+    <nav class="flex-1 p-4 space-y-1">
+        <p class="text-[9px] font-black text-gray-700 uppercase tracking-widest px-4 py-4">Image Tools</p>
+        <div class="sidebar-link active-link"><span>✂️</span> Background Remover</div>
+        <div class="sidebar-link"><span>✨</span> Object Removal</div>
+        <div class="sidebar-link"><span>📐</span> Image Upscaler</div>
+        <div class="sidebar-link"><span>👗</span> AI Fashion Model</div>
 
-        <div class="p-4 border-t border-white/5">
-            <button onclick="logout()" class="w-full py-3 rounded-xl bg-red-500/10 text-red-500 font-bold text-xs uppercase tracking-widest">Secure Exit</button>
+        <p class="text-[9px] font-black text-gray-700 uppercase tracking-widest px-4 py-4">Content Tools</p>
+        <div class="sidebar-link"><span>🤖</span> Titan AI Chat</div>
+        <div class="sidebar-link"><span>📝</span> SEO Copywriter</div>
+        <div class="sidebar-link"><span>📢</span> Viral Script Gen</div>
+
+        <p class="text-[9px] font-black text-gray-700 uppercase tracking-widest px-4 py-4">Developer</p>
+        <div class="sidebar-link"><span>💻</span> Code Optimizer</div>
+        <div class="sidebar-link"><span>🔍</span> SEO Deep Audit</div>
+    </nav>
+
+    <div class="p-4 border-t border-white/5">
+        <button onclick="logout()" class="w-full py-3 rounded-xl bg-red-500/5 text-red-500 font-bold text-[9px] uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all">Lock System</button>
+    </div>
+</aside>
+
+<main id="mainAppUI" class="hidden flex-1 flex flex-col bg-[#000] h-full overflow-hidden">
+    <header class="p-8 flex justify-between items-center border-b border-white/5">
+        <div>
+            <h3 class="text-xl font-black uppercase italic tracking-tighter">Neural Command Center</h3>
+            <p class="text-indigo-500 text-[9px] font-bold tracking-[0.2em] uppercase">Status: Unlimited Throughput</p>
         </div>
-    </aside>
-
-    <main class="flex-1 flex flex-col bg-[#050505] overflow-y-auto">
-        <header class="p-8 flex justify-between items-center border-b border-white/5">
-            <div>
-                <h3 class="text-2xl font-black uppercase italic">Dashboard</h3>
-                <p class="text-green-500 text-[10px] font-bold tracking-widest">● SYSTEM ENCRYPTED</p>
-            </div>
-            <div class="flex gap-4">
-                <div class="vbc-card px-4 py-2 rounded-xl text-[10px] font-black">STABLE 1.0.2</div>
-            </div>
-        </header>
-
-        <div class="p-8 lg:p-12">
-            <h4 class="text-gray-500 font-black text-xs uppercase tracking-[0.3em] mb-8">Available Neural Tools</h4>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="tool-card p-8 rounded-[35px] vbc-card">
-                    <div class="text-3xl mb-4">🧠</div>
-                    <h5 class="font-black text-lg uppercase italic mb-1">Titan Chat Pro</h5>
-                    <p class="text-gray-500 text-xs leading-relaxed">Advanced language model for complex problem solving.</p>
-                </div>
-
-                <div class="tool-card p-8 rounded-[35px] vbc-card">
-                    <div class="text-3xl mb-4">🖼️</div>
-                    <h5 class="font-black text-lg uppercase italic mb-1">Phoenix Vision</h5>
-                    <p class="text-gray-500 text-xs leading-relaxed">AI Image generation with ultra-high resolution output.</p>
-                </div>
-
-                <div class="tool-card p-8 rounded-[35px] vbc-card">
-                    <div class="text-3xl mb-4">✍️</div>
-                    <h5 class="font-black text-lg uppercase italic mb-1">Copy Engine</h5>
-                    <p class="text-gray-500 text-xs leading-relaxed">High-converting marketing copy and blog automation.</p>
-                </div>
-
-                <div class="tool-card p-8 rounded-[35px] vbc-card">
-                    <div class="text-3xl mb-4">🚀</div>
-                    <h5 class="font-black text-lg uppercase italic mb-1">SEO Master</h5>
-                    <p class="text-gray-500 text-xs leading-relaxed">Audit websites and generate keywords in seconds.</p>
-                </div>
-
-                <div class="tool-card p-8 rounded-[35px] vbc-card">
-                    <div class="text-3xl mb-4">⚡</div>
-                    <h5 class="font-black text-lg uppercase italic mb-1">Quick Code</h5>
-                    <p class="text-gray-500 text-xs leading-relaxed">Debug and generate clean code for any language.</p>
-                </div>
-
-                <div class="tool-card p-8 rounded-[35px] vbc-card">
-                    <div class="text-3xl mb-4">📈</div>
-                    <h5 class="font-black text-lg uppercase italic mb-1">Data Analyst</h5>
-                    <p class="text-gray-500 text-xs leading-relaxed">Upload CSV/Data for instant neural insights.</p>
-                </div>
-                </div>
+        <div class="flex items-center gap-4">
+            <div class="bg-green-500/10 text-green-500 px-4 py-1.5 rounded-full text-[9px] font-black tracking-widest uppercase">Latency: 2ms</div>
         </div>
-    </main>
-</div>
+    </header>
+
+    <div class="flex-1 overflow-y-auto p-8 lg:p-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div class="tool-card vbc-card p-6 rounded-[25px]">
+                <div class="text-2xl mb-3">📸</div>
+                <h5 class="font-black text-sm uppercase italic mb-1 text-white">AI BG Remover</h5>
+                <p class="text-gray-500 text-[10px] font-bold leading-tight uppercase">Photoroom Level Precision</p>
+            </div>
+
+            <div class="tool-card vbc-card p-6 rounded-[25px]">
+                <div class="text-2xl mb-3">🪄</div>
+                <h5 class="font-black text-sm uppercase italic mb-1 text-white">Magic Eraser</h5>
+                <p class="text-gray-500 text-[10px] font-bold leading-tight uppercase">Instant Object Clean</p>
+            </div>
+
+            <div class="tool-card vbc-card p-6 rounded-[25px]">
+                <div class="text-2xl mb-3">🧠</div>
+                <h5 class="font-black text-sm uppercase italic mb-1 text-white">Titan Chat</h5>
+                <p class="text-gray-500 text-[10px] font-bold leading-tight uppercase">High-Speed Reasoning</p>
+            </div>
+
+            <div class="tool-card vbc-card p-6 rounded-[25px]">
+                <div class="text-2xl mb-3">🖼️</div>
+                <h5 class="font-black text-sm uppercase italic mb-1 text-white">Product Studio</h5>
+                <p class="text-gray-500 text-[10px] font-bold leading-tight uppercase">Commercial Photoshoots</p>
+            </div>
+
+            <div class="tool-card vbc-card p-6 rounded-[25px]">
+                <div class="text-2xl mb-3">📝</div>
+                <h5 class="font-black text-sm uppercase italic mb-1 text-white">Blog Master</h5>
+                <p class="text-gray-500 text-[10px] font-bold leading-tight uppercase">2k Words in Seconds</p>
+            </div>
+
+            <div class="tool-card vbc-card p-6 rounded-[25px]">
+                <div class="text-2xl mb-3">🚀</div>
+                <h5 class="font-black text-sm uppercase italic mb-1 text-white">SEO Optimizer</h5>
+                <p class="text-gray-500 text-[10px] font-bold leading-tight uppercase">Global Rank Analysis</p>
+            </div>
+
+            <div class="tool-card vbc-card p-6 rounded-[25px]">
+                <div class="text-2xl mb-3">🎨</div>
+                <h5 class="font-black text-sm uppercase italic mb-1 text-white">AI Colorizer</h5>
+                <p class="text-gray-500 text-[10px] font-bold leading-tight uppercase">B&W to Color Instant</p>
+            </div>
+
+            <div class="tool-card vbc-card p-6 rounded-[25px]">
+                <div class="text-2xl mb-3">⚡</div>
+                <h5 class="font-black text-sm uppercase italic mb-1 text-white">Code Debugger</h5>
+                <p class="text-gray-500 text-[10px] font-bold leading-tight uppercase">Neural Code Fix</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    function checkKey() {
+        const key = document.getElementById('keyIn').value;
+        if(key === "TITAN-VBC-2024") {
+            document.getElementById('gateWrapper').classList.add('hidden');
+            document.getElementById('sidebar').classList.remove('hidden');
+            document.getElementById('mainAppUI').classList.remove('hidden');
+            localStorage.setItem('titan_v12_fast', 'true');
+        } else {
+            alert("KEY ERROR");
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('titan_v12_fast');
+        location.reload();
+    }
+
+    window.onload = function() {
+        if(localStorage.getItem('titan_v12_fast') === 'true') {
+            document.getElementById('gateWrapper').classList.add('hidden');
+            document.getElementById('sidebar').classList.remove('hidden');
+            document.getElementById('mainAppUI').classList.remove('hidden');
+        }
+    }
+</script>
 
 </body>
 </html>
