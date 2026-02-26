@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
     <title>VBC TITAN | Professional AI Suite</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
     
@@ -12,7 +14,6 @@
         import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Your Config Integrated
         const firebaseConfig = {
             apiKey: "AIzaSyBjijSc9bNh2CXJiEfR7WgCT77CNscSTPs",
             authDomain: "titan-app-vbc.firebaseapp.com",
@@ -26,12 +27,11 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Security: Check License Key
+        // System Activation Logic
         window.activateSystem = async () => {
             const user = auth.currentUser;
             const keyInput = document.getElementById('keyIn').value;
             
-            // Master Key (Aap isay badal saktay hain)
             if(keyInput === "TITAN-VBC-2024") { 
                 await setDoc(doc(db, "users", user.uid), {
                     email: user.email,
@@ -39,26 +39,23 @@
                     status: "Active",
                     activatedAt: new Date().toISOString()
                 }, { merge: true });
-                alert("System Activated! Welcome.");
+                alert("System Activated! Welcome to V12.");
                 location.reload();
             } else {
-                alert("Invalid Key. Contact Fahad on WhatsApp.");
+                alert("Invalid Key. Contact Fahad.");
             }
         };
 
-        // Google Sign-In
         window.login = () => {
             const provider = new GoogleAuthProvider();
             signInWithPopup(auth, provider).catch(e => alert(e.message));
         };
 
-        // Auth Observer
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 document.getElementById('authGate').classList.add('hidden');
                 document.getElementById('licenseGate').classList.remove('hidden');
                 
-                // Check if user is already activated in Database
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists() && userDoc.data().status === "Active") {
                     document.getElementById('gateWrapper').style.display = 'none';
@@ -69,10 +66,12 @@
     </script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; background: #000; color: white; }
-        .vbc-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-        .btn-primary { background: #410CD9; transition: 0.3s; }
-        .btn-primary:hover { background: #3309ad; transform: translateY(-2px); }
+        body { font-family: 'Inter', sans-serif; background: #000; color: white; overflow-x: hidden; }
+        .vbc-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+        .glow-button { background: #410CD9; box-shadow: 0 0 20px rgba(65, 12, 217, 0.4); transition: 0.3s; }
+        .glow-button:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(65, 12, 217, 0.6); }
+        .stat-card { transition: 0.3s; }
+        .stat-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(65, 12, 217, 0.5); }
     </style>
 </head>
 <body>
@@ -83,29 +82,72 @@
         <h1 class="text-3xl font-black tracking-tighter mb-2 uppercase">Titan Phoenix V12</h1>
         
         <div id="authGate">
-            <p class="text-gray-400 mb-8">Sign in with your official account to access the neural engine.</p>
-            <button onclick="login()" class="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-3">
+            <p class="text-gray-400 mb-8 font-medium text-sm">Sign in to initialize the neural engine.</p>
+            <button onclick="login()" class="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-3 hover:bg-gray-200 transition">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="h-5">
                 Continue with Google
             </button>
         </div>
 
         <div id="licenseGate" class="hidden">
-            <p class="text-gray-400 mb-6">Enter your professional license key to unlock the system.</p>
-            <input type="text" id="keyIn" placeholder="XXXX-XXXX-XXXX" class="w-full p-5 bg-white/10 border border-white/20 rounded-2xl text-center font-black text-xl mb-4 text-white outline-none focus:border-indigo-500">
-            <button onclick="activateSystem()" class="btn-primary w-full py-5 rounded-2xl font-bold mb-6">Activate Engine</button>
-            <hr class="border-white/10 mb-6">
-            <p class="text-sm text-gray-500 mb-2">Need a License?</p>
-            <a href="https://wa.me/923217452433?text=Hi%20Fahad,%20I'm%20interested%20in%20Titan%20Phoenix.%20Please%20send%20me%20packages%20and%20billing%20details." class="text-green-400 font-bold hover:underline">Chat with Fahad on WhatsApp</a>
+            <p class="text-gray-400 mb-6 text-sm">Enter professional license key to unlock dashboard.</p>
+            <input type="text" id="keyIn" placeholder="TITAN-XXXX-XXXX" class="w-full p-5 bg-white/5 border border-white/10 rounded-2xl text-center font-black text-xl mb-4 text-white outline-none focus:border-indigo-500">
+            <button onclick="activateSystem()" class="glow-button w-full py-5 rounded-2xl font-bold mb-6">ACTIVATE ENGINE</button>
+            <hr class="border-white/5 mb-6">
+            <a href="https://wa.me/923217452433" class="text-indigo-400 text-sm font-bold hover:underline">Get License from Fahad</a>
         </div>
     </div>
 </div>
 
-<div id="mainAppUI" class="hidden h-screen flex items-center justify-center">
-    <div class="text-center">
-        <h2 class="text-4xl font-black mb-4">SYSTEM ONLINE</h2>
-        <p class="text-gray-400">Owner Dashboard is now tracking your session.</p>
+<div id="mainAppUI" class="hidden min-h-screen bg-[#050505] p-6 lg:p-12">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+            <div>
+                <h2 class="text-4xl font-black text-white uppercase tracking-tighter italic">Command Center</h2>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
+                    <p class="text-gray-500 text-xs font-bold tracking-widest uppercase">System Online: Stable</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 bg-white/5 p-2 rounded-3xl border border-white/5">
+                <div class="px-5 py-2 rounded-2xl text-xs font-black bg-indigo-500/10 text-indigo-400">V12.0.5 PRO</div>
+                <button onclick="auth.signOut().then(() => location.reload())" class="px-5 py-2 rounded-2xl text-xs font-black bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition">SECURE LOGOUT</button>
+            </div>
         </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div class="vbc-card stat-card p-8 rounded-[35px]">
+                <p class="text-gray-500 text-[10px] font-black tracking-widest uppercase mb-2">Neural Load</p>
+                <h3 class="text-4xl font-black">24.8%</h3>
+            </div>
+            <div class="vbc-card stat-card p-8 rounded-[35px]">
+                <p class="text-gray-500 text-[10px] font-black tracking-widest uppercase mb-2">Data Flow</p>
+                <h3 class="text-4xl font-black">1.2 GB/s</h3>
+            </div>
+            <div class="vbc-card stat-card p-8 rounded-[35px]">
+                <p class="text-gray-500 text-[10px] font-black tracking-widest uppercase mb-2">Active Modules</p>
+                <h3 class="text-4xl font-black">09</h3>
+            </div>
+            <div class="vbc-card stat-card p-8 rounded-[35px]">
+                <p class="text-gray-500 text-[10px] font-black tracking-widest uppercase mb-2">Security</p>
+                <h3 class="text-4xl font-black text-indigo-500">MAX</h3>
+            </div>
+        </div>
+
+        <div class="vbc-card w-full aspect-video lg:h-[500px] rounded-[50px] flex items-center justify-center relative overflow-hidden group">
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/5 to-transparent"></div>
+            <div class="text-center relative z-10">
+                <div class="w-20 h-20 bg-indigo-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-indigo-500/20 group-hover:scale-110 transition">
+                    <svg class="w-10 h-10 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h4 class="text-2xl font-black text-white uppercase tracking-tight">Welcome, Operator</h4>
+                <p class="text-gray-500 max-w-xs mx-auto text-sm mt-2">The system is ready for commands. Select a module from your side panel to begin.</p>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>
