@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VBC TITAN | Professional AI Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Your Config Integrated
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjijSc9bNh2CXJiEfR7WgCT77CNscSTPs",
+            authDomain: "titan-app-vbc.firebaseapp.com",
+            projectId: "titan-app-vbc",
+            storageBucket: "titan-app-vbc.firebasestorage.app",
+            messagingSenderId: "700768811307",
+            appId: "1:700768811307:web:32c8afd9dda8133d302d6e"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Security: Check License Key
+        window.activateSystem = async () => {
+            const user = auth.currentUser;
+            const keyInput = document.getElementById('keyIn').value;
+            
+            // Master Key (Aap isay badal saktay hain)
+            if(keyInput === "TITAN-VBC-2024") { 
+                await setDoc(doc(db, "users", user.uid), {
+                    email: user.email,
+                    displayName: user.displayName,
+                    status: "Active",
+                    activatedAt: new Date().toISOString()
+                }, { merge: true });
+                alert("System Activated! Welcome.");
+                location.reload();
+            } else {
+                alert("Invalid Key. Contact Fahad on WhatsApp.");
+            }
+        };
+
+        // Google Sign-In
+        window.login = () => {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider).catch(e => alert(e.message));
+        };
+
+        // Auth Observer
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                document.getElementById('authGate').classList.add('hidden');
+                document.getElementById('licenseGate').classList.remove('hidden');
+                
+                // Check if user is already activated in Database
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists() && userDoc.data().status === "Active") {
+                    document.getElementById('gateWrapper').style.display = 'none';
+                    document.getElementById('mainAppUI').classList.remove('hidden');
+                }
+            }
+        });
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #000; color: white; }
+        .vbc-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .btn-primary { background: #410CD9; transition: 0.3s; }
+        .btn-primary:hover { background: #3309ad; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+<div id="gateWrapper" class="fixed inset-0 z-[9999] bg-black flex items-center justify-center p-6 text-center">
+    <div class="vbc-card max-w-md w-full p-10 rounded-[40px]">
+        <img src="logo.png" class="h-16 mx-auto mb-6" onerror="this.src='https://via.placeholder.com/64'">
+        <h1 class="text-3xl font-black tracking-tighter mb-2 uppercase">Titan Phoenix V12</h1>
+        
+        <div id="authGate">
+            <p class="text-gray-400 mb-8">Sign in with your official account to access the neural engine.</p>
+            <button onclick="login()" class="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-3">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="h-5">
+                Continue with Google
+            </button>
+        </div>
+
+        <div id="licenseGate" class="hidden">
+            <p class="text-gray-400 mb-6">Enter your professional license key to unlock the system.</p>
+            <input type="text" id="keyIn" placeholder="XXXX-XXXX-XXXX" class="w-full p-5 bg-white/10 border border-white/20 rounded-2xl text-center font-black text-xl mb-4 text-white outline-none focus:border-indigo-500">
+            <button onclick="activateSystem()" class="btn-primary w-full py-5 rounded-2xl font-bold mb-6">Activate Engine</button>
+            <hr class="border-white/10 mb-6">
+            <p class="text-sm text-gray-500 mb-2">Need a License?</p>
+            <a href="https://wa.me/923217452433?text=Hi%20Fahad,%20I'm%20interested%20in%20Titan%20Phoenix.%20Please%20send%20me%20packages%20and%20billing%20details." class="text-green-400 font-bold hover:underline">Chat with Fahad on WhatsApp</a>
+        </div>
+    </div>
+</div>
+
+<div id="mainAppUI" class="hidden h-screen flex items-center justify-center">
+    <div class="text-center">
+        <h2 class="text-4xl font-black mb-4">SYSTEM ONLINE</h2>
+        <p class="text-gray-400">Owner Dashboard is now tracking your session.</p>
+        </div>
+</div>
+
+</body>
+</html>
