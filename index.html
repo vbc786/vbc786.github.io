@@ -3,243 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ELITE TITAN | AI Visual Studio</title>
+    <title>ELITE TITAN | All-in-One AI Visual Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #ffffff;
-            --panel: #f8f8f9;
-            --text: #000000;
-            --text-muted: #64748b;
-            --border: rgba(0,0,0,0.06);
-            --accent: #6366f1;
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            --bg: #ffffff; --panel: #f9f9fb; --text: #000000; --text-muted: #64748b;
+            --border: rgba(0,0,0,0.06); --accent: #6366f1;
         }
-
         .dark-mode {
-            --bg: #000000;
-            --panel: #0a0a0b;
-            --text: #ffffff;
-            --text-muted: #94a3b8;
-            --border: rgba(255,255,255,0.08);
-            --card-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            --bg: #000000; --panel: #0a0a0b; --text: #ffffff; --text-muted: #94a3b8;
+            --border: rgba(255,255,255,0.1);
         }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; margin: 0; overflow-x: hidden; }
+        
+        /* Navigation & UI */
+        .glass-nav { background: rgba(var(--bg), 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .section { display: none; padding-top: 100px; min-height: 100vh; }
+        .section.active { display: block; animation: fadeIn 0.5s ease; }
+        
+        /* Premium Components */
+        .btn-primary { background: var(--accent); color: white; padding: 12px 28px; border-radius: 12px; font-weight: 700; transition: 0.3s; }
+        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3); }
+        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 32px; transition: 0.4s; padding: 40px; }
+        .card:hover { transform: translateY(-10px); border-color: var(--accent); }
 
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            transition: background 0.4s, color 0.4s;
-            margin: 0;
-        }
+        /* Studio Editor */
+        #studio-app { background: var(--bg); position: fixed; inset: 0; z-index: 2000; display: none; }
+        .upload-dropzone { border: 2px dashed var(--border); border-radius: 40px; background: var(--panel); cursor: pointer; transition: 0.3s; }
+        .upload-dropzone:hover { border-color: var(--accent); background: rgba(99, 102, 241, 0.05); }
 
-        /* Premium Glass Header */
-        .glass-header { 
-            background: rgba(var(--bg), 0.8); 
-            backdrop-filter: blur(20px); 
-            border-bottom: 1px solid var(--border);
-            position: sticky; top: 0; z-index: 1000;
-        }
-
-        /* Modern Tool Cards */
-        .tool-card { 
-            background: var(--panel); 
-            border: 1px solid var(--border); 
-            border-radius: 28px; 
-            box-shadow: var(--card-shadow);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .tool-card:hover { 
-            transform: translateY(-8px); 
-            border-color: var(--accent);
-        }
-
-        /* Editor Overlay */
-        #editorScreen {
-            display: none; position: fixed; inset: 0; 
-            background: var(--bg); z-index: 2000;
-        }
-
-        /* Sidebar Styling */
-        .sidebar {
-            width: 280px; height: 100vh; position: fixed; left: 0; top: 0;
-            background: var(--panel); border-right: 1px solid var(--border);
-            padding-top: 100px;
-        }
-        .main-content { margin-left: 280px; padding: 60px; }
-
-        .btn-toggle {
-            width: 44px; height: 44px; border-radius: 12px;
-            background: var(--panel); border: 1px solid var(--border);
-            display: flex; items-center; justify-content: center; cursor: pointer;
-        }
-
-        .upload-zone {
-            border: 2px dashed var(--border);
-            background: var(--panel);
-            border-radius: 32px;
-            transition: 0.3s;
-        }
-        .upload-zone:hover { border-color: var(--accent); }
-
-        .hidden { display: none !important; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body class="dark-mode"> <header class="glass-header px-10 py-5 flex justify-between items-center">
-    <div class="flex items-center gap-14">
-        <div class="flex items-center gap-3 cursor-pointer" onclick="goHome()">
-            <img src="logo.png" alt="Logo" class="h-8">
-            <span class="font-black italic text-2xl tracking-tighter uppercase">ELITE <span class="text-indigo-500">TITAN</span></span>
-        </div>
-        <nav class="hidden xl:flex gap-2">
-            <button class="px-4 py-2 text-sm font-bold opacity-60 hover:opacity-100">Product</button>
-            <button class="px-4 py-2 text-sm font-bold opacity-60 hover:opacity-100">Solutions</button>
-            <button class="px-4 py-2 text-sm font-bold opacity-60 hover:opacity-100">Enterprise</button>
-            <button class="px-4 py-2 text-sm font-bold opacity-60 hover:opacity-100">Pricing</button>
-        </nav>
-    </div>
-    
-    <div class="flex items-center gap-6">
-        <button onclick="toggleMode()" class="btn-toggle text-xl">
-            <span id="modeIcon">☀️</span>
-        </button>
-        <button class="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold text-sm hover:bg-indigo-500 transition shadow-lg shadow-indigo-600/20">Start Free Trial</button>
-    </div>
-</header>
+<body class="dark-mode">
 
-<aside class="sidebar hidden lg:flex flex-col px-8">
-    <p class="text-[10px] font-bold opacity-40 uppercase tracking-[0.2em] mb-8">Creation Suite</p>
-    <div class="flex items-center gap-4 py-4 font-bold text-sm cursor-pointer opacity-60 hover:opacity-100 transition" onclick="openEditor('AI Product Staging')">
-        <span>📸</span> AI Staging
-    </div>
-    <div class="flex items-center gap-4 py-4 font-bold text-sm cursor-pointer opacity-60 hover:opacity-100 transition" onclick="openEditor('Background Remover')">
-        <span>✂️</span> BG Remover
-    </div>
-    <div class="flex items-center gap-4 py-4 font-bold text-sm cursor-pointer opacity-60 hover:opacity-100 transition" onclick="openEditor('Magic Eraser')">
-        <span>🪄</span> Magic Eraser
-    </div>
-    
-    <div class="mt-auto mb-10 p-4 rounded-2xl bg-indigo-600/5 border border-indigo-600/10">
-        <p class="text-[10px] font-black uppercase text-indigo-500 mb-1">Elite Operator</p>
-        <p class="text-sm font-bold">Fahad</p>
-    </div>
-</aside>
-
-<main id="dashboard" class="main-content">
-    <div class="max-w-5xl">
-        <h1 class="text-6xl font-black italic uppercase tracking-tighter mb-6 leading-none">
-            From Photo to Profit <br><span class="text-indigo-500 underline decoration-indigo-500/20">Visuals That Convert.</span>
-        </h1>
-        <p class="text-lg font-medium opacity-60 max-w-2xl mb-16">
-            The professional AI visual studio for high-growth brands. 
-            Select a core module below to launch the editor.
-        </p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            <div class="tool-card p-12 flex flex-col items-start group cursor-pointer" onclick="openEditor('Background Remover')">
-                <div class="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-3xl mb-10 group-hover:bg-indigo-600 transition-all duration-500">✂️</div>
-                <h3 class="text-2xl font-black uppercase italic mb-4">BG Remover</h3>
-                <p class="text-sm opacity-50 mb-12">Precision background removal for complex product geometry.</p>
-                <button class="mt-auto text-[10px] font-black uppercase tracking-widest text-indigo-500">Launch Module →</button>
+    <nav class="glass-nav px-10 py-5 flex justify-between items-center">
+        <div class="flex items-center gap-12">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('home')">
+                <img src="logo.png" alt="Logo" class="h-8">
+                <span class="font-black italic text-xl uppercase tracking-tighter">ELITE <span class="text-indigo-500">TITAN</span></span>
             </div>
-
-            <div class="tool-card p-12 flex flex-col items-start group cursor-pointer" onclick="openEditor('AI Product Staging')">
-                <div class="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-3xl mb-10 group-hover:bg-indigo-600 transition-all duration-500">📸</div>
-                <h3 class="text-2xl font-black uppercase italic mb-4">AI Staging</h3>
-                <p class="text-sm opacity-50 mb-12">Transform assets into studio-quality lifestyle marketing imagery.</p>
-                <button class="mt-auto text-[10px] font-black uppercase tracking-widest text-indigo-500">Launch Module →</button>
-            </div>
-
-            <div class="tool-card p-12 flex flex-col items-start group cursor-pointer" onclick="openEditor('Magic Eraser')">
-                <div class="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-3xl mb-10 group-hover:bg-indigo-600 transition-all duration-500">🪄</div>
-                <h3 class="text-2xl font-black uppercase italic mb-4">Magic Eraser</h3>
-                <p class="text-sm opacity-50 mb-12">Neural object removal and imperfections cleanup in one click.</p>
-                <button class="mt-auto text-[10px] font-black uppercase tracking-widest text-indigo-500">Launch Module →</button>
+            <div class="hidden lg:flex gap-8">
+                <button class="text-sm font-bold opacity-70 hover:opacity-100" onclick="showSection('features')">Product</button>
+                <button class="text-sm font-bold opacity-70 hover:opacity-100" onclick="showSection('enterprise')">Enterprise</button>
+                <button class="text-sm font-bold opacity-70 hover:opacity-100" onclick="showSection('pricing')">Pricing</button>
             </div>
         </div>
-    </div>
-</main>
-
-<div id="editorScreen" class="flex flex-col">
-    <header class="px-10 py-6 flex justify-between items-center border-b border-white/5">
         <div class="flex items-center gap-6">
-            <button onclick="goHome()" class="font-bold text-sm opacity-50 hover:opacity-100 flex items-center gap-2">
-                <span>←</span> Studio
-            </button>
-            <h2 id="editorTitle" class="text-lg font-black italic uppercase tracking-widest text-indigo-500 border-l border-white/10 pl-6">Module</h2>
+            <button onclick="toggleTheme()" class="p-2 bg-white/5 rounded-lg border border-white/10" id="themeBtn">☀️</button>
+            <button class="btn-primary text-sm" onclick="openStudio()">Open Studio</button>
         </div>
-        <div class="flex gap-4">
-            <button class="px-6 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs">Download HD</button>
-        </div>
-    </header>
+    </nav>
 
-    <div class="flex-1 flex items-center justify-center p-20">
-        <div class="max-w-4xl w-full text-center">
-            <div id="uploadBox" class="upload-zone p-24 flex flex-col items-center justify-center cursor-pointer">
-                <div class="text-5xl mb-8">📁</div>
-                <h3 class="text-3xl font-black uppercase italic mb-3">Upload Asset to Play</h3>
-                <p class="opacity-40 font-medium mb-12">Drag your product photo here or click to browse</p>
-                <input type="file" id="assetInput" class="hidden" onchange="previewAsset(this)">
-                <button onclick="document.getElementById('assetInput').click()" class="bg-white text-black px-12 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition hover:scale-105">Browse Files</button>
+    <section id="home" class="section active px-10 lg:px-40 text-center">
+        <div class="max-w-4xl mx-auto pt-20">
+            <h1 class="text-7xl font-black italic uppercase tracking-tighter leading-none mb-8">
+                From Photo to Profit <br><span class="text-indigo-500">Visuals That Convert</span>
+            </h1>
+            <p class="text-xl opacity-60 mb-12">Elite Titan is built for modern sellers. Remove backgrounds with precision and generate high-impact studio visuals directly from your browser.</p>
+            <div class="flex justify-center gap-6">
+                <button class="btn-primary py-5 px-12 text-lg" onclick="openStudio()">Start Free Trial</button>
+                <button class="px-12 py-5 border border-white/10 rounded-xl font-bold hover:bg-white/5 transition" onclick="showSection('enterprise')">Contact Sales</button>
             </div>
+            <div class="mt-20 opacity-30 flex justify-center gap-16 grayscale invert flex-wrap">
+                <span class="text-2xl font-black italic">AMAZON</span> <span class="text-2xl font-black italic">SHOPIFY</span> <span class="text-2xl font-black italic">DOORDASH</span>
+            </div>
+        </div>
+    </section>
 
-            <div id="previewBox" class="hidden">
-                <div class="bg-white/5 p-6 rounded-[40px] border border-white/10 shadow-2xl">
-                    <img id="imageDisplay" src="" class="max-h-[55vh] mx-auto rounded-3xl">
+    <section id="features" class="section px-10 lg:px-40">
+        <h2 class="text-4xl font-black italic uppercase mb-16 text-center tracking-tighter">Everything you need <span class="text-indigo-500">to scale</span></h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div class="card">
+                <div class="text-4xl mb-6">✂️</div>
+                <h3 class="text-2xl font-black uppercase mb-4">BG Remover</h3>
+                <p class="opacity-60 text-sm">Professional precision for complex products including transparent materials.</p>
+            </div>
+            <div class="card">
+                <div class="text-4xl mb-6">📸</div>
+                <h3 class="text-2xl font-black uppercase mb-4">AI Staging</h3>
+                <p class="opacity-60 text-sm">Generate realistic, on-brand lifestyle visuals for your catalog instantly.</p>
+            </div>
+            <div class="card">
+                <div class="text-4xl mb-6">🪄</div>
+                <h3 class="text-2xl font-black uppercase mb-4">Magic Eraser</h3>
+                <p class="opacity-60 text-sm">Remove unwanted objects, text, or imperfections with neural AI.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="section px-10 lg:px-40">
+        <div class="text-center mb-16">
+            <h2 class="text-5xl font-black italic uppercase tracking-tighter">Flexible Plans</h2>
+            <p class="opacity-60 mt-4 font-medium">Cut your photo costs by 90% — not your quality.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="card p-8 text-center border-indigo-500/20">
+                <h4 class="font-black uppercase text-indigo-500">Starter</h4>
+                <p class="text-3xl font-black my-6">$0</p>
+                <ul class="text-xs space-y-3 opacity-60 mb-8"><li>10 Images/mo</li><li>HD Export</li><li>Standard Support</li></ul>
+                <button class="w-full py-3 bg-white/5 border border-white/10 rounded-lg font-bold">Choose Starter</button>
+            </div>
+            <div class="card p-8 text-center bg-indigo-600/5 border-indigo-500 shadow-xl">
+                <h4 class="font-black uppercase text-indigo-500">Growth</h4>
+                <p class="text-3xl font-black my-6">$29</p>
+                <ul class="text-xs space-y-3 opacity-80 mb-8"><li>100 Images/mo</li><li>Full AI Suite</li><li>Priority Support</li></ul>
+                <button class="btn-primary w-full py-3">Get Growth</button>
+            </div>
+            </div>
+    </section>
+
+    <section id="enterprise" class="section px-10 lg:px-40">
+        <div class="card bg-indigo-600 p-20 flex flex-col md:flex-row items-center gap-12 text-white">
+            <div class="flex-1">
+                <h2 class="text-5xl font-black italic uppercase tracking-tighter mb-6">Enterprise Solutions</h2>
+                <p class="text-lg opacity-90 mb-8">Scale your content production without losing brand identity. Automated workflows, API access, and dedicated support.</p>
+                <button class="bg-white text-black px-10 py-4 rounded-xl font-black uppercase tracking-widest text-sm">Talk to Sales</button>
+            </div>
+            <div class="flex-1 text-center">
+                <div class="text-8xl">🚀</div>
+            </div>
+        </div>
+    </section>
+
+    <div id="studio-app">
+        <header class="p-6 border-b border-white/5 flex justify-between items-center">
+            <div class="flex items-center gap-6">
+                <button onclick="closeStudio()" class="font-bold text-sm opacity-50 hover:opacity-100 flex items-center gap-2">← Exit</button>
+                <span class="font-black italic uppercase border-l border-white/10 pl-6 text-indigo-500">Elite Titan Studio V15</span>
+            </div>
+            <div class="flex gap-4">
+                <button class="px-6 py-2 bg-indigo-600 text-white rounded-xl font-bold text-xs" id="downloadBtn" style="display:none">Download HD</button>
+            </div>
+        </header>
+        <div class="h-[calc(100vh-80px)] flex items-center justify-center p-10">
+            <div id="dropzone" class="upload-dropzone w-full max-w-3xl p-24 text-center">
+                <div class="text-6xl mb-8">☁️</div>
+                <h3 class="text-3xl font-black uppercase italic mb-4">Upload Asset to Play</h3>
+                <p class="opacity-50 mb-10">Drag and drop any product photo to start AI processing</p>
+                <input type="file" class="hidden" id="studioInput" onchange="processImage(this)">
+                <button class="bg-indigo-600 text-white px-12 py-4 rounded-2xl font-black uppercase tracking-widest" onclick="document.getElementById('studioInput').click()">Browse Computer</button>
+            </div>
+            <div id="preview-container" class="hidden w-full max-w-4xl text-center">
+                <div class="bg-white/5 p-4 rounded-[40px] border border-white/10 relative overflow-hidden group">
+                    <img id="mainPreview" src="" class="max-h-[60vh] mx-auto rounded-3xl transition duration-700">
+                    <div class="absolute inset-0 bg-indigo-600/40 opacity-0 group-hover:opacity-100 flex items-center justify-center backdrop-blur-sm transition">
+                        <p class="font-black italic uppercase tracking-[0.2em]">Neural Processing Active...</p>
+                    </div>
                 </div>
-                <div class="mt-12 flex justify-center gap-6">
-                    <button class="p-4 bg-indigo-600 text-white rounded-2xl font-bold text-sm px-10">Process AI Visual</button>
-                    <button onclick="resetEditor()" class="p-4 bg-white/5 rounded-2xl font-bold text-sm px-10 opacity-50 hover:opacity-100">Clear</button>
-                </div>
+                <button class="mt-8 opacity-40 hover:opacity-100 font-bold underline" onclick="resetStudio()">Upload different file</button>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    function toggleMode() {
-        const body = document.body;
-        const icon = document.getElementById('modeIcon');
-        if(body.classList.contains('dark-mode')) {
-            body.classList.remove('dark-mode');
-            icon.innerText = '🌙';
-        } else {
-            body.classList.add('dark-mode');
-            icon.innerText = '☀️';
+    <script>
+        // Navigation Logic
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0,0);
         }
-    }
 
-    function openEditor(title) {
-        document.getElementById('editorTitle').innerText = title;
-        document.getElementById('editorScreen').style.display = 'flex';
-        document.getElementById('dashboard').classList.add('hidden');
-    }
+        // Studio Logic
+        function openStudio() { 
+            document.getElementById('studio-app').style.display = 'block'; 
+            document.body.style.overflow = 'hidden';
+        }
+        function closeStudio() { 
+            document.getElementById('studio-app').style.display = 'none'; 
+            document.body.style.overflow = 'auto';
+        }
 
-    function goHome() {
-        document.getElementById('editorScreen').style.display = 'none';
-        document.getElementById('dashboard').classList.remove('hidden');
-        resetEditor();
-    }
-
-    function previewAsset(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('uploadBox').classList.add('hidden');
-                document.getElementById('previewBox').classList.remove('hidden');
-                document.getElementById('imageDisplay').src = e.target.result;
+        function processImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('dropzone').classList.add('hidden');
+                    document.getElementById('preview-container').classList.remove('hidden');
+                    document.getElementById('mainPreview').src = e.target.result;
+                    document.getElementById('downloadBtn').style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
             }
-            reader.readAsDataURL(input.files[0]);
         }
-    }
 
-    function resetEditor() {
-        document.getElementById('uploadBox').classList.remove('hidden');
-        document.getElementById('previewBox').classList.add('hidden');
-        document.getElementById('assetInput').value = '';
-    }
-</script>
+        function resetStudio() {
+            document.getElementById('dropzone').classList.remove('hidden');
+            document.getElementById('preview-container').classList.add('hidden');
+            document.getElementById('studioInput').value = '';
+            document.getElementById('downloadBtn').style.display = 'none';
+        }
 
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+            document.getElementById('themeBtn').innerText = body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        }
+    </script>
 </body>
 </html>
