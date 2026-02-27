@@ -4,137 +4,143 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <title>ELITE TITAN | Professional AI Photo Studio</title>
+    <title>ELITE TITAN | Your All-in-one AI Photo Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #6366f1; --bg-dark: #000000; --panel: #0a0a0a; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: white; margin: 0; overflow: hidden; }
+        :root { --accent: #6366f1; --bg: #000000; --card: #0c0c0e; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: white; margin: 0; overflow: hidden; }
         
-        /* High-End Design Elements */
-        .glass-panel { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .sidebar { background: #050505; border-right: 1px solid rgba(255, 255, 255, 0.05); width: 280px; }
+        /* High-End Polished UI */
+        .glass-sidebar { background: #050505; border-right: 1px solid rgba(255, 255, 255, 0.05); }
+        .premium-card { background: var(--card); border: 1px solid rgba(255,255,255,0.04); border-radius: 28px; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); cursor: pointer; position: relative; }
+        .premium-card:hover { transform: translateY(-10px); border-color: var(--accent); background: #111114; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
         
-        /* Interactive Cards */
-        .tool-card { background: var(--panel); border: 1px solid rgba(255,255,255,0.03); border-radius: 32px; transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1); cursor: pointer; position: relative; overflow: hidden; }
-        .tool-card:hover { transform: translateY(-10px) scale(1.02); border-color: var(--accent); box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 20px rgba(99, 102, 241, 0.1); }
-        .tool-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent, rgba(99, 102, 241, 0.05)); opacity: 0; transition: 0.5s; }
-        .tool-card:hover::before { opacity: 1; }
+        .nav-link { padding: 12px 18px; border-radius: 14px; color: #71717a; font-weight: 600; font-size: 13px; transition: 0.2s; display: flex; align-items: center; gap: 12px; }
+        .nav-link:hover, .nav-link.active { color: white; background: rgba(99, 102, 241, 0.06); }
+        .nav-link.active { border-left: 3px solid var(--accent); background: linear-gradient(90deg, rgba(99, 102, 241, 0.1), transparent); }
 
-        /* Status & Badges */
-        .badge-premium { background: linear-gradient(90deg, #6366f1, #a855f7); padding: 2px 10px; border-radius: 20px; font-size: 9px; font-weight: 800; text-transform: uppercase; }
-        .status-pulse { height: 8px; width: 8px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 10px #22c55e; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        .btn-main { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); transition: 0.3s; }
+        .btn-main:hover { transform: scale(1.02); box-shadow: 0 0 25px rgba(99, 102, 241, 0.4); }
 
+        .badge-new { background: #facc15; color: black; font-size: 8px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; margin-left: auto; }
         .hidden { display: none !important; }
-        input::placeholder { color: #333; }
         
-        /* Active Sidebar Logic */
-        .sidebar-link { padding: 14px 20px; border-radius: 16px; color: #52525b; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 12px; font-size: 13px; }
-        .sidebar-link:hover, .sidebar-link.active { background: rgba(255,255,255,0.03); color: white; }
-        .sidebar-link.active { border-left: 3px solid var(--accent); background: linear-gradient(90deg, rgba(99, 102, 241, 0.1), transparent); }
+        /* Speed & Smoothness */
+        * { transition: background-color 0.2s, border-color 0.2s; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
     </style>
 </head>
 <body class="h-screen flex">
 
 <div id="gateWrapper" class="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center p-6 text-center">
-    <img src="logo.png" alt="ELITE TITAN" class="h-32 mb-10 drop-shadow-[0_0_30px_rgba(99,102,241,0.4)]">
-    <div class="glass-panel max-w-sm w-full p-12 rounded-[50px]">
-        <h1 class="text-3xl font-extrabold mb-1 tracking-tighter uppercase italic text-white">Elite <span class="text-indigo-500">Titan</span></h1>
-        <p class="text-[9px] text-zinc-500 mb-10 uppercase tracking-[0.5em] font-bold">V12 AI Photo Studio Core</p>
-        <input type="text" id="keyIn" placeholder="ENTER SYSTEM ACCESS KEY" class="w-full p-5 bg-[#0a0a0a] rounded-[24px] text-center text-white outline-none border border-white/10 font-mono mb-5 focus:border-indigo-500 uppercase tracking-[0.2em] text-[10px]">
-        <button onclick="checkKey()" class="w-full py-5 rounded-[24px] font-black bg-indigo-600 hover:bg-indigo-500 text-white uppercase tracking-widest text-xs transition-all shadow-2xl shadow-indigo-600/30">Verify Identity</button>
+    <div class="mb-12 animate-pulse">
+        <img src="logo.png" alt="ELITE TITAN" class="h-24 mx-auto">
+    </div>
+    <div class="max-w-md w-full p-12 rounded-[40px] bg-[#080808] border border-white/5 shadow-2xl">
+        <h1 class="text-4xl font-extrabold mb-2 tracking-tighter uppercase italic">Elite <span class="text-indigo-500">Titan</span></h1>
+        <p class="text-[10px] text-zinc-500 mb-10 uppercase tracking-[0.4em] font-bold">Authorized AI Studio Access</p>
+        
+        <input type="text" id="keyIn" placeholder="ENTER TERMINAL KEY" class="w-full p-5 bg-black rounded-[20px] text-center text-white outline-none border border-white/10 font-mono mb-5 focus:border-indigo-500 uppercase tracking-widest text-xs">
+        <button onclick="checkKey()" class="btn-main w-full py-5 rounded-[20px] font-black text-white uppercase tracking-widest text-xs shadow-lg active:scale-95">Unlock V12 Engine</button>
+        
+        <p class="mt-8 text-[9px] text-zinc-600 font-bold uppercase tracking-widest">© 2024 Elite Titan Labs • All Rights Reserved</p>
     </div>
 </div>
 
 <div id="mainAppUI" class="hidden h-screen w-full flex overflow-hidden">
     
-    <aside class="sidebar flex flex-col h-full z-10">
-        <div class="p-10 text-center">
-            <img src="logo.png" alt="Elite Titan" class="h-16 mx-auto mb-4 object-contain">
-            <h2 class="font-black italic text-xl tracking-tighter uppercase leading-none">ELITE <span class="text-indigo-500">TITAN</span></h2>
+    <aside class="w-72 glass-sidebar flex flex-col h-full z-10">
+        <div class="p-10 border-b border-white/5">
+            <img src="logo.png" alt="Elite Titan" class="h-10 mb-4">
+            <h2 class="font-black italic text-lg tracking-tighter uppercase">Elite <span class="text-indigo-500">Titan</span></h2>
         </div>
         
-        <nav class="flex-1 px-6 space-y-1 overflow-y-auto">
-            <p class="text-[10px] font-bold text-zinc-600 uppercase tracking-widest px-4 py-4">Studio Tools</p>
-            <div class="sidebar-link active"><span>🖼️</span> AI Product Staging</div>
-            <div class="sidebar-link"><span>✂️</span> Background Remover</div>
-            <div class="sidebar-link"><span>🪄</span> Magic Object Eraser</div>
-            <div class="sidebar-link"><span>✨</span> AI Product Beautifier</div>
+        <nav class="flex-1 px-6 space-y-1 overflow-y-auto py-6">
+            <p class="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em] px-4 py-3">Creation Tools</p>
+            <div class="nav-link active"><span>✨</span> AI Product Staging <span class="badge-new">New</span></div>
+            <div class="nav-link"><span>✂️</span> Background Remover</div>
+            <div class="nav-link"><span>🪄</span> Magic Object Eraser</div>
+            <div class="nav-link"><span>🎨</span> AI Product Beautifier</div>
+            <div class="nav-link"><span>🎬</span> Animate Photos</div>
             
-            <p class="text-[10px] font-bold text-zinc-600 uppercase tracking-widest px-4 py-8">Automation</p>
-            <div class="sidebar-link"><span>🤖</span> Titan AI Chat Bot</div>
-            <div class="sidebar-link"><span>📋</span> Bulk Processor</div>
-            <div class="sidebar-link"><span>📊</span> SEO Copywriter</div>
+            <p class="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.2em] px-4 py-8">Business & Scale</p>
+            <div class="nav-link"><span>🤖</span> Titan AI Chat (V12)</div>
+            <div class="nav-link"><span>📦</span> Batch Processor</div>
+            <div class="nav-link"><span>🚀</span> SEO Copywriter</div>
         </nav>
 
-        <div class="p-8">
-            <button onclick="logout()" class="w-full py-4 rounded-2xl bg-zinc-900/50 text-zinc-500 font-bold text-[10px] uppercase tracking-widest border border-white/5 hover:bg-red-600 hover:text-white transition-all">Secure Logout</button>
+        <div class="p-8 border-t border-white/5">
+            <button onclick="logout()" class="w-full py-4 rounded-xl bg-zinc-900/50 text-zinc-500 font-bold text-[10px] uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all">Terminate Session</button>
         </div>
     </aside>
 
     <main class="flex-1 flex flex-col bg-[#020202] overflow-hidden">
         
-        <header class="p-10 flex justify-between items-center border-b border-white/5">
-            <div class="flex items-center gap-6">
-                <h3 class="text-3xl font-extrabold uppercase italic tracking-tighter">Command Center</h3>
-                <div class="flex items-center gap-2 bg-green-500/10 px-4 py-1.5 rounded-full">
-                    <span class="status-pulse"></span>
-                    <p class="text-green-500 text-[9px] font-black tracking-widest uppercase">System Online</p>
+        <header class="px-10 py-8 flex justify-between items-center bg-black/40 backdrop-blur-xl border-b border-white/5">
+            <div class="flex items-center gap-8">
+                <div>
+                    <h3 class="text-2xl font-black uppercase italic tracking-tighter">Command Center</h3>
+                    <p class="text-zinc-500 text-[10px] font-bold tracking-widest uppercase mt-1">Status: <span class="text-green-500">Neural Engine Active</span></p>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <div class="badge-premium">Elite Operator</div>
-                <div class="glass-panel px-6 py-2.5 rounded-full text-[10px] font-black italic text-indigo-400">FAHAD</div>
+            <div class="flex items-center gap-6">
+                <div class="flex -space-x-2">
+                    <div class="w-8 h-8 rounded-full border-2 border-black bg-indigo-500 flex items-center justify-center text-[10px] font-bold">F</div>
+                </div>
+                <div class="h-10 w-px bg-white/10"></div>
+                <div class="text-[10px] font-black italic text-indigo-400 tracking-widest">OP: FAHAD</div>
             </div>
         </header>
 
-        <div class="flex-1 overflow-y-auto p-10 pt-6">
-            <div class="mb-12">
-                <h4 class="text-4xl font-extrabold tracking-tighter mb-2 italic uppercase">Create Pro Visuals <span class="text-indigo-500">That Sell.</span></h4>
-                <p class="text-zinc-500 text-sm font-medium">Transform ordinary product shots into scroll-stopping visuals that drive conversions.</p>
+        <div class="flex-1 overflow-y-auto p-12">
+            <div class="mb-12 max-w-2xl">
+                <h4 class="text-5xl font-extrabold tracking-tighter mb-4 italic uppercase leading-[0.9]">Create visuals <br><span class="text-indigo-500 underline decoration-indigo-800">that actually sell.</span></h4>
+                <p class="text-zinc-400 text-sm font-medium leading-relaxed">Transform ordinary product shots into scroll-stopping visuals that drive clicks, trust, and conversions[cite: 7]. Cut costs by 90% without losing quality[cite: 12].</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 
-                <div class="tool-card p-10 group">
-                    <div class="w-16 h-16 bg-white/5 rounded-3xl flex items-center justify-center text-3xl mb-8 border border-white/5 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500">✂️</div>
-                    <h5 class="font-extrabold text-xl uppercase italic mb-2">BG Remover</h5>
-                    <p class="text-zinc-500 text-xs leading-relaxed mb-8">Cut photo costs by 90%. Consistent high-quality background removal in seconds.</p>
-                    <button class="w-full py-4 bg-white/5 rounded-2xl text-[9px] font-black uppercase tracking-widest border border-white/5 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-transparent transition-all">Launch AI Module</button>
+                <div class="premium-card p-10 flex flex-col">
+                    <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-2xl mb-8 border border-white/5">✂️</div>
+                    <h5 class="font-extrabold text-lg uppercase italic mb-2 tracking-tight">BG Remover Pro</h5>
+                    <p class="text-zinc-500 text-xs leading-relaxed mb-10">Create consistent high-quality product photography in seconds[cite: 48].</p>
+                    <button class="mt-auto w-full py-4 bg-white/5 rounded-xl text-[9px] font-black uppercase tracking-widest border border-white/10 hover:bg-indigo-600 hover:text-white transition-all">Open Module</button>
                 </div>
 
-                <div class="tool-card p-10 group">
-                    <div class="w-16 h-16 bg-white/5 rounded-3xl flex items-center justify-center text-3xl mb-8 border border-white/5 group-hover:bg-purple-600 group-hover:text-white transition-all duration-500">📸</div>
-                    <h5 class="font-extrabold text-xl uppercase italic mb-2">Product Staging</h5>
-                    <p class="text-zinc-500 text-xs leading-relaxed mb-8">AI-powered studio staging. Perfect for Shopify, Amazon, and marketplaces.</p>
-                    <button class="w-full py-4 bg-white/5 rounded-2xl text-[9px] font-black uppercase tracking-widest border border-white/5 group-hover:bg-purple-600 group-hover:text-white group-hover:border-transparent transition-all">Launch AI Module</button>
+                <div class="premium-card p-10 flex flex-col border-indigo-500/30 bg-indigo-500/5">
+                    <div class="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-2xl mb-8 shadow-xl shadow-indigo-600/30 text-white">📸</div>
+                    <h5 class="font-extrabold text-lg uppercase italic mb-2 tracking-tight">Product Staging</h5>
+                    <p class="text-zinc-400 text-xs leading-relaxed mb-10">Transform photos into profit with AI-powered studio backgrounds[cite: 24, 50].</p>
+                    <button class="mt-auto w-full py-4 bg-indigo-600 rounded-xl text-[9px] font-black uppercase tracking-widest text-white hover:bg-indigo-500 transition-all">Launch AI Studio</button>
                 </div>
 
-                <div class="tool-card p-10 group">
-                    <div class="w-16 h-16 bg-white/5 rounded-3xl flex items-center justify-center text-3xl mb-8 border border-white/5 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500">🤖</div>
-                    <h5 class="font-extrabold text-xl uppercase italic mb-2">Titan Chat</h5>
-                    <p class="text-zinc-500 text-xs leading-relaxed mb-8">Advanced AI Chatbot to automate your product descriptions and workflow.</p>
-                    <button class="w-full py-4 bg-white/5 rounded-2xl text-[9px] font-black uppercase tracking-widest border border-white/5 group-hover:bg-blue-600 group-hover:text-white group-hover:border-transparent transition-all">Launch AI Module</button>
+                <div class="premium-card p-10 flex flex-col">
+                    <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-2xl mb-8 border border-white/5">🪄</div>
+                    <h5 class="font-extrabold text-lg uppercase italic mb-2 tracking-tight">Magic Eraser</h5>
+                    <p class="text-zinc-500 text-xs leading-relaxed mb-10">Retouch images instantly. Remove unwanted objects or imperfections[cite: 52].</p>
+                    <button class="mt-auto w-full py-4 bg-white/5 rounded-xl text-[9px] font-black uppercase tracking-widest border border-white/10 hover:bg-indigo-600 hover:text-white transition-all">Open Module</button>
                 </div>
 
-                <div class="tool-card p-10 group border-indigo-500/20 bg-indigo-500/5">
-                    <div class="w-16 h-16 bg-indigo-600 rounded-3xl flex items-center justify-center text-3xl mb-8 shadow-[0_0_20px_rgba(99,102,241,0.4)]">🪄</div>
-                    <h5 class="font-extrabold text-xl uppercase italic mb-2 text-white">Magic Eraser</h5>
-                    <p class="text-zinc-400 text-xs leading-relaxed mb-8">Retouch images instantly. Remove objects, text, or imperfections at scale.</p>
-                    <button class="w-full py-4 bg-indigo-600 rounded-2xl text-[9px] font-black uppercase tracking-widest text-white shadow-xl shadow-indigo-600/30 transition-all">Launch Elite Module</button>
+                <div class="premium-card p-10 flex flex-col">
+                    <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-2xl mb-8 border border-white/5">✨</div>
+                    <h5 class="font-extrabold text-lg uppercase italic mb-2 tracking-tight">AI Beautifier</h5>
+                    <p class="text-zinc-500 text-xs leading-relaxed mb-10">Enhance lighting, color, and sharpness automatically for pro visuals[cite: 51].</p>
+                    <button class="mt-auto w-full py-4 bg-white/5 rounded-xl text-[9px] font-black uppercase tracking-widest border border-white/10 hover:bg-indigo-600 hover:text-white transition-all">Open Module</button>
                 </div>
 
             </div>
 
-            <div class="mt-12 glass-panel p-8 rounded-[40px] flex items-center justify-between">
+            <div class="mt-16 p-10 rounded-[35px] bg-gradient-to-r from-zinc-900/50 to-transparent border border-white/5 flex items-center justify-between">
                 <div>
-                    <h6 class="text-xl font-black italic uppercase tracking-tighter">Automate Your Workflow</h6>
-                    <p class="text-zinc-500 text-xs">Photoroom has significantly reduced costs for large volume brands.</p>
+                    <h6 class="text-lg font-black uppercase italic tracking-tighter">Loved by leading brands</h6>
+                    <p class="text-zinc-600 text-[10px] font-bold uppercase tracking-widest">Elite Titan powers visuals for over 1M+ businesses[cite: 36].</p>
                 </div>
-                <div class="flex gap-4">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" class="h-4 opacity-30 invert grayscale">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" class="h-4 opacity-30 invert grayscale">
+                <div class="flex gap-8 opacity-20 invert grayscale">
+                    <span class="font-black text-xl italic uppercase">amazon</span>
+                    <span class="font-black text-xl italic uppercase">Shopify</span>
+                    <span class="font-black text-xl italic uppercase">Depop</span>
                 </div>
             </div>
         </div>
@@ -142,31 +148,28 @@
 </div>
 
 <script>
-    // System Initialization & Key Verification
+    // Precise Logic & Performance
     function checkKey() {
         const input = document.getElementById('keyIn').value.trim().toUpperCase();
-        const masterKey = "TITAN-VBC-2024";
-        
-        if(input === masterKey) {
+        if(input === "TITAN-VBC-2024") {
             document.getElementById('gateWrapper').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('gateWrapper').classList.add('hidden');
                 document.getElementById('mainAppUI').classList.remove('hidden');
-                localStorage.setItem('elite_titan_v12_auth', 'active');
-            }, 500);
+                localStorage.setItem('elite_auth', 'true');
+            }, 400);
         } else {
-            alert("SYSTEM ERROR: UNATHORIZED ACCESS KEY DETECTED.");
+            alert("ACCESS DENIED: Internal Security Alert.");
         }
     }
 
     function logout() {
-        localStorage.removeItem('elite_titan_v12_auth');
+        localStorage.removeItem('elite_auth');
         location.reload();
     }
 
-    // Auto-Login Logic
     window.onload = function() {
-        if(localStorage.getItem('elite_titan_v12_auth') === 'active') {
+        if(localStorage.getItem('elite_auth') === 'true') {
             document.getElementById('gateWrapper').classList.add('hidden');
             document.getElementById('mainAppUI').classList.remove('hidden');
         }
