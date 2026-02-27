@@ -4,51 +4,143 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <title>TITAN PHOENIX V12</title>
+    <title>ELITE TITAN | AI Intelligence Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
+        :root { --accent: #6366f1; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #000; color: white; margin: 0; overflow: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .btn-premium { background: #6366f1; transition: 0.3s; box-shadow: 0 0 20px rgba(99, 102, 241, 0.2); }
-        .btn-premium:hover { background: #4f46e5; transform: translateY(-2px); box-shadow: 0 0 40px rgba(99, 102, 241, 0.4); }
+        
+        /* Premium UI Elements */
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .sidebar-item { transition: 0.2s; color: #666; cursor: pointer; border-radius: 12px; }
+        .sidebar-item:hover, .sidebar-item.active { color: white; background: rgba(99, 102, 241, 0.1); border-left: 4px solid var(--accent); }
+        .tool-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; cursor: pointer; border-radius: 35px; }
+        .tool-card:hover { border-color: var(--accent); background: rgba(99, 102, 241, 0.05); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.1); }
+        
         .hidden { display: none !important; }
-        input::placeholder { color: #444; }
+        input::placeholder { color: #333; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
     </style>
 </head>
-<body class="h-screen flex items-center justify-center">
+<body class="h-screen flex">
 
 <div id="gateWrapper" class="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center p-6 text-center">
-    <div class="mb-6">
-        <img src="logo.png" alt="TITAN LOGO" class="h-32 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+    <div class="mb-8">
+        <img src="logo.png" alt="ELITE TITAN LOGO" class="h-32 w-auto object-contain drop-shadow-[0_0_25px_rgba(99,102,241,0.4)]">
     </div>
 
-    <div class="glass max-w-sm w-full p-10 rounded-[40px]">
-        <h1 class="text-2xl font-extrabold mb-1 tracking-tighter uppercase italic">Titan Phoenix</h1>
-        <p class="text-[9px] text-indigo-500 mb-8 uppercase tracking-[0.4em] font-bold">Secure Access Terminal</p>
+    <div class="glass max-w-sm w-full p-10 rounded-[45px]">
+        <h1 class="text-3xl font-extrabold mb-1 tracking-tighter uppercase italic">Elite <span class="text-indigo-500">Titan</span></h1>
+        <p class="text-[9px] text-gray-500 mb-8 uppercase tracking-[0.4em] font-bold">V12 Neural Engine Access</p>
         
-        <input type="password" id="keyIn" placeholder="ENTER ACCESS KEY" 
-               class="w-full p-4 bg-[#0a0a0a] rounded-2xl text-center text-white outline-none border border-white/5 font-mono mb-4 focus:border-indigo-500 transition-all">
+        <input type="text" id="keyIn" placeholder="ENTER SYSTEM KEY" 
+               class="w-full p-5 bg-[#0a0a0a] rounded-[22px] text-center text-white outline-none border border-white/5 font-mono mb-4 focus:border-indigo-500 transition-all uppercase tracking-widest">
         
-        <button onclick="checkKey()" class="btn-premium w-full py-4 rounded-2xl font-black uppercase tracking-widest text-xs">Authorize Access</button>
+        <button onclick="checkKey()" class="w-full py-5 rounded-[22px] font-black bg-indigo-600 hover:bg-indigo-500 text-white uppercase tracking-widest text-xs transition-all shadow-xl shadow-indigo-600/30">Authorize Access</button>
         
-        <p class="mt-6 text-[8px] text-gray-600 font-bold uppercase tracking-widest">Operator Console v12.0.8</p>
+        <p class="mt-8 text-[8px] text-gray-700 font-bold uppercase tracking-widest">Proprietary Software of Elite Titan Labs</p>
     </div>
 </div>
 
 <div id="mainAppUI" class="hidden h-screen w-full flex overflow-hidden">
-    <aside class="w-64 bg-[#050505] border-r border-white/5 flex flex-col h-full">
-        <div class="p-8 text-center border-b border-white/5">
-            <img src="logo.png" alt="Logo" class="h-10 mx-auto mb-3">
-            <h2 class="font-black italic text-lg tracking-tighter">PHOENIX V12</h2>
+    
+    <aside class="w-72 bg-[#050505] border-r border-white/5 flex flex-col h-full">
+        <div class="p-10 text-center border-b border-white/5">
+            <img src="logo.png" alt="Elite Titan Logo" class="h-12 mx-auto mb-3">
+            <h2 class="font-black italic text-xl tracking-tighter uppercase">ELITE <span class="text-indigo-500">TITAN</span></h2>
         </div>
-        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-            <div class="p-4 rounded-xl bg-indigo-500/10 text-white font-bold text-xs flex items-center gap-3 border-l-4 border-indigo-500"><span>🖼️</span> AI IMAGE STUDIO</div>
-            <div class="p-4 text-gray-500 font-bold text-xs flex items-center gap-3 hover:text-white transition cursor-pointer"><span>✂️</span> BG REMOVER</div>
-            <div class="p-4 text-gray-500 font-bold text-xs flex items-center gap-3 hover:text-white transition cursor-pointer"><span>🪄</span> MAGIC ERASER</div>
-            <div class="p-4 text-gray-500 font-bold text-xs flex items-center gap-3 hover:text-white transition cursor-pointer"><span>🤖</span> TITAN CHAT</div>
+        
+        <nav class="flex-1 p-6 space-y-1 overflow-y-auto">
+            <p class="text-[10px] font-bold text-gray-600 uppercase tracking-widest px-4 py-2">Image Processing</p>
+            <div class="sidebar-item active p-4 flex items-center gap-4 text-sm font-bold"><span>🖼️</span> AI Studio</div>
+            <div class="sidebar-item p-4 flex items-center gap-4 text-sm font-bold"><span>✂️</span> BG Remover Pro</div>
+            <div class="sidebar-item p-4 flex items-center gap-4 text-sm font-bold"><span>🪄</span> Magic Eraser</div>
+            
+            <p class="text-[10px] font-bold text-gray-600 uppercase tracking-widest px-4 py-6">Advanced Tools</p>
+            <div class="sidebar-item p-4 flex items-center gap-4 text-sm font-bold"><span>🤖</span> Titan Chat Bot</div>
+            <div class="sidebar-item p-4 flex items-center gap-4 text-sm font-bold"><span>📝</span> Elite Copywriter</div>
+            <div class="sidebar-item p-4 flex items-center gap-4 text-sm font-bold"><span>🚀</span> SEO Optimizer</div>
         </nav>
-        <div class="p-6">
-            <button onclick="logout()" class="w-full py-3 rounded-xl bg-white/5 text-red-500 font-bold text-[10px] uppercase tracking-widest border border-red-500/10 hover:bg-red-500 hover:text-white transition">Terminate</button>
+
+        <div class="p-8 border-t border-white/5">
+            <button onclick="logout()" class="w-full py-4 rounded-2xl bg-white/5 text-red-500 font-bold text-[10px] uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all">Secure Logout</button>
         </div>
     </aside>
+
+    <main class="flex-1 flex flex-col bg-black overflow-y-auto">
+        <header class="p-10 flex justify-between items-center border-b border-white/5">
+            <div>
+                <h3 class="text-3xl font-extrabold uppercase italic tracking-tighter text-white">Command Center</h3>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    <p class="text-gray-500 text-[10px] font-bold tracking-widest uppercase">Elite Titan Engine: Online</p>
+                </div>
+            </div>
+            <div class="glass px-6 py-2 rounded-full border-indigo-500/20 text-[10px] font-black italic text-indigo-400">OPERATOR: FAHAD</div>
+        </header>
+        
+        <div class="p-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div class="tool-card p-8">
+                    <div class="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center text-2xl mb-6">✂️</div>
+                    <h5 class="font-bold text-lg uppercase italic mb-1">BG Remover</h5>
+                    <p class="text-gray-500 text-[11px] leading-relaxed">Remove backgrounds in 1-click with Elite Titan precision.</p>
+                </div>
+
+                <div class="tool-card p-8">
+                    <div class="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center text-2xl mb-6">✨</div>
+                    <h5 class="font-bold text-lg uppercase italic mb-1">Magic Eraser</h5>
+                    <p class="text-gray-500 text-[11px] leading-relaxed">Instantly erase objects using our neural in-painting tech.</p>
+                </div>
+
+                <div class="tool-card p-8">
+                    <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center text-2xl mb-6">🤖</div>
+                    <h5 class="font-bold text-lg uppercase italic mb-1">Titan AI Chat</h5>
+                    <p class="text-gray-500 text-[11px] leading-relaxed">Deep reasoning AI assistant for content and business.</p>
+                </div>
+
+                <div class="tool-card p-8">
+                    <div class="w-12 h-12 bg-pink-500/10 rounded-xl flex items-center justify-center text-2xl mb-6">📸</div>
+                    <h5 class="font-bold text-lg uppercase italic mb-1">Product Studio</h5>
+                    <p class="text-gray-500 text-[11px] leading-relaxed">Photoroom-style commercial backgrounds for products.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Bulletproof Key Check
+    function checkKey() {
+        const input = document.getElementById('keyIn').value.trim().toUpperCase();
+        const masterKey = "TITAN-VBC-2024";
+        
+        if(input === masterKey) {
+            document.getElementById('gateWrapper').classList.add('hidden');
+            document.getElementById('mainAppUI').classList.remove('hidden');
+            localStorage.setItem('elite_titan_auth', 'active');
+        } else {
+            alert("ACCESS DENIED: Please use correct key.");
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('elite_titan_auth');
+        location.reload();
+    }
+
+    // Check login state on load
+    window.onload = function() {
+        if(localStorage.getItem('elite_titan_auth') === 'active') {
+            document.getElementById('gateWrapper').classList.add('hidden');
+            document.getElementById('mainAppUI').classList.remove('hidden');
+        }
+    }
+</script>
+
+</body>
+</html>
